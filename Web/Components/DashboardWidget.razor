@@ -2,7 +2,7 @@
 
 <MudPaper Class="pa-4 ma-2" Style="@GetPaperStyle()" title="@Tooltip" Elevation="2">
     <div class="d-flex align-center">
-        <MudAvatar Color="@GetAvatarColor()" Variant="Variant.Filled" Size="Size.Large" Class="mr-4">
+        <MudAvatar Color="@Color" Variant="Variant.Filled" Size="Size.Large" Class="mr-4">
             <MudIcon Icon="@Icon" />
         </MudAvatar>
         <div class="flex-grow-1">
@@ -14,61 +14,26 @@
 
 @code {
     [Parameter] public required string Title { get; set; }
-    [Parameter] public required object Value { get; set; }
+    [Parameter] public required string Value { get; set; }
     [Parameter] public required string Icon { get; set; }
     [Parameter] public required string Tooltip { get; set; }
-    [Parameter] public required string Color { get; set; } = "primary";
+    [Parameter] public required MudBlazor.Color Color { get; set; } = MudBlazor.Color.Primary;
 
     private string GetPaperStyle()
     {
-        var colorMap = new Dictionary<string, string>
+        var colorMap = new Dictionary<MudBlazor.Color, string>
         {
-            { "primary", "background: linear-gradient(45deg, var(--mud-palette-primary), var(--mud-palette-primary-lighten));" },
-            { "secondary", "background: linear-gradient(45deg, var(--mud-palette-secondary), var(--mud-palette-secondary-lighten));" },
-            { "success", "background: linear-gradient(45deg, var(--mud-palette-success), var(--mud-palette-success-lighten));" },
-            { "info", "background: linear-gradient(45deg, var(--mud-palette-info), var(--mud-palette-info-lighten));" },
-            { "warning", "background: linear-gradient(45deg, var(--mud-palette-warning), var(--mud-palette-warning-lighten));" },
-            { "error", "background: linear-gradient(45deg, var(--mud-palette-error), var(--mud-palette-error-lighten));" }
+            { MudBlazor.Color.Primary, "background: linear-gradient(45deg, var(--mud-palette-primary), var(--mud-palette-primary-lighten)); color: white;" },
+            { MudBlazor.Color.Secondary, "background: linear-gradient(45deg, var(--mud-palette-secondary), var(--mud-palette-secondary-lighten)); color: white;" },
+            { MudBlazor.Color.Success, "background: linear-gradient(45deg, var(--mud-palette-success), var(--mud-palette-success-lighten)); color: white;" },
+            { MudBlazor.Color.Info, "background: linear-gradient(45deg, var(--mud-palette-info), var(--mud-palette-info-lighten)); color: white;" },
+            { MudBlazor.Color.Warning, "background: linear-gradient(45deg, var(--mud-palette-warning), var(--mud-palette-warning-lighten)); color: white;" },
+            { MudBlazor.Color.Error, "background: linear-gradient(45deg, var(--mud-palette-error), var(--mud-palette-error-lighten)); color: white;" }
         };
 
-        return colorMap.ContainsKey(Color.ToLower()) 
-            ? colorMap[Color.ToLower()] + " color: white;" 
+        return colorMap.ContainsKey(Color) 
+            ? colorMap[Color] + " color: white;" 
             : "background: linear-gradient(45deg, var(--mud-palette-primary), var(--mud-palette-primary-lighten)); color: white;";
     }
 
-    private MudBlazor.Color GetAvatarColor()
-    {
-        return Color.ToLower() switch
-        {
-            "primary" => MudBlazor.Color.Primary,
-            "secondary" => MudBlazor.Color.Secondary,
-            "success" => MudBlazor.Color.Success,
-            "info" => MudBlazor.Color.Info,
-            "warning" => MudBlazor.Color.Warning,
-            "error" => MudBlazor.Color.Error,
-            _ => MudBlazor.Color.Primary
-        };
-    }
-
-    @* private string GetMudIcon()
-    {
-        // Mapeamento comum de ícones para MudBlazor Icons
-        var iconMap = new Dictionary<string, string>
-        {
-            { "dashboard.png", Icons.Material.Filled.Dashboard },
-            { "users.png", Icons.Material.Filled.People },
-            { "sales.png", Icons.Material.Filled.AttachMoney },
-            { "orders.png", Icons.Material.Filled.ShoppingCart },
-            { "revenue.png", Icons.Material.Filled.TrendingUp },
-            { "analytics.png", Icons.Material.Filled.Analytics },
-            { "chart.png", Icons.Material.Filled.BarChart },
-            { "growth.png", Icons.Material.Filled.TrendingUp },
-            { "calendar.png", Icons.Material.Filled.CalendarToday },
-            { "settings.png", Icons.Material.Filled.Settings }
-        };
-
-        return iconMap.ContainsKey(Icon) 
-            ? iconMap[Icon] 
-            : Icons.Material.Filled.Info;
-    } *@
 }

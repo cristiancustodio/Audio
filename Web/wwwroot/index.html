@@ -29,6 +29,14 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-</body>
 
+    <script>
+        window.addThemeListener = (dotNetHelper) => {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                dotNetHelper.invokeMethodAsync('OnThemeChange', e.matches);
+            });
+        }
+    </script>    
+    <script src="js/theme.js"></script>
+</body>
 </html>

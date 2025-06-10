@@ -1,4 +1,11 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly">
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -11,6 +18,19 @@
     </NotFound>
 </Router>
 
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+@code {
+    private bool _isDarkMode;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _isDarkMode = await JSRuntime.InvokeAsync<bool>("isDarkMode");
+        await JSRuntime.InvokeVoidAsync("addDarkModeListener", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void OnThemeChanged(bool isDark)
+    {
+        _isDarkMode = isDark;
+        StateHasChanged();
+    }
+}

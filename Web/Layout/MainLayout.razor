@@ -1,8 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
 <MudLayout>
-    <MudDrawer @bind-Open="@_open" Elevation="2" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-        <NavMenu />
+    <MudDrawer @bind-Open="@_open" Anchor="Anchor.Left" Elevation="2" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+        <NavMenuLeft />
+    </MudDrawer>
+   <MudDrawer Anchor="Anchor.Right" Elevation="2" Variant="@DrawerVariant.Mini">
+        <NavMenuRight />
     </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large" >
