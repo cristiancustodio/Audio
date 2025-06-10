@@ -2,6 +2,33 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudGrid Justify="Justify.Center" Spacing="4">
+        <MudItem xs="12" sm="6" md="4">
+            <DashboardWidget 
+                Title="Vendas Totais" 
+                Value="125.000" 
+                Icon="@Icons.Material.Filled.MonetizationOn" 
+                Tooltip="Total de vendas do mês" 
+                Color="success" />
+        </MudItem>
+        
+        <MudItem xs="12" sm="6" md="4">
+            <DashboardWidget 
+                Title="Clientes" 
+                Value="847" 
+                Icon="@Icons.Material.Filled.People" 
+                Tooltip="Total de clientes ativos" 
+                Color="primary" />
+        </MudItem>
 
-Welcome to your new app.
+        <MudItem xs="12" sm="6" md="4">
+            <DashboardWidget 
+                Title="Pedidos" 
+                Value="53" 
+                Icon="@Icons.Material.Filled.ShoppingCart" 
+                Tooltip="Pedidos em aberto" 
+                Color="warning" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
