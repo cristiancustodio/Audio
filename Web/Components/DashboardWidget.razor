@@ -1,7 +1,10 @@
 @using Microsoft.AspNetCore.Components
 
 <MudPaper Class="pa-4 ma-2 dashboard-widget" Style="@GetPaperStyle()" title="@Tooltip" Elevation="2">
-    <div class="d-flex align-center">
+    <div class="background-icon">
+        <MudIcon Icon="@Icon" Style="font-size: 140px;" />
+    </div>
+    <div class="d-flex align-center position-relative">
         <div class="icon-bg mr-4">
             <MudIcon Icon="@Icon" Size="Size.Large" />
         </div>
@@ -14,9 +17,20 @@
 
 <style>
 .dashboard-widget {
-    border-radius: 18px; /* Cantos arredondados */
+    border-radius: 18px;
     overflow: hidden;
+    position: relative;
 }
+
+.background-icon {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    opacity: 0.1;
+    z-index: 0;
+    transform: rotate(-15deg);
+}
+
 .icon-bg {
     width: 56px;
     height: 56px;
@@ -24,8 +38,15 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(255,255,255,0.18) url('/images/icone-bg.svg') center/cover no-repeat; /* Substitua pelo caminho da imagem desejada */
+    background: rgba(255,255,255,0.18);
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 1;
+}
+
+.flex-grow-1 {
+    position: relative;
+    z-index: 1;
 }
 </style>
 
