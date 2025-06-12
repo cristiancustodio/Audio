@@ -1,16 +1,33 @@
 @using Microsoft.AspNetCore.Components
 
-<MudPaper Class="pa-4 ma-2" Style="@GetPaperStyle()" title="@Tooltip" Elevation="2">
+<MudPaper Class="pa-4 ma-2 dashboard-widget" Style="@GetPaperStyle()" title="@Tooltip" Elevation="2">
     <div class="d-flex align-center">
-        <MudAvatar Color="@Color" Variant="Variant.Filled" Size="Size.Large" Class="mr-4">
-            <MudIcon Icon="@Icon" />
-        </MudAvatar>
+        <div class="icon-bg mr-4">
+            <MudIcon Icon="@Icon" Size="Size.Large" />
+        </div>
         <div class="flex-grow-1">
             <MudText Typo="Typo.subtitle2" Class="mb-1">@Title</MudText>
             <MudText Typo="Typo.h6" Class="font-weight-bold">@Value</MudText>
         </div>
     </div>
 </MudPaper>
+
+<style>
+.dashboard-widget {
+    border-radius: 18px; /* Cantos arredondados */
+    overflow: hidden;
+}
+.icon-bg {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18) url('/images/icone-bg.svg') center/cover no-repeat; /* Substitua pelo caminho da imagem desejada */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+</style>
 
 @code {
     [Parameter] public required string Title { get; set; }
@@ -35,5 +52,4 @@
             ? colorMap[Color] + " color: white;" 
             : "background: linear-gradient(45deg, var(--mud-palette-primary), var(--mud-palette-primary-lighten)); color: white;";
     }
-
 }
