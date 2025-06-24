@@ -1,0 +1,178 @@
+@page "/aparelhos"
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="py-8">
+    <MudPaper Class="pa-8" Elevation="8" Style="border-radius: 16px;">
+        <!-- Header Section -->
+        <MudStack Spacing="2" Class="mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.DevicesOther" 
+                     Size="Size.Large" 
+                     Color="Color.Primary" 
+                     Class="align-self-center" />
+            <MudText Typo="Typo.h4" 
+                     Align="Align.Center" 
+                     Color="Color.Primary" 
+                     Class="fw-bold">
+                Cadastro de Aparelhos
+            </MudText>
+            <MudText Typo="Typo.body1" 
+                     Align="Align.Center" 
+                     Color="Color.Secondary" 
+                     Class="mb-4">
+                Preencha os dados do aparelho para realizar o cadastro
+            </MudText>
+            <MudDivider />
+        </MudStack>
+
+        <!-- Form Section -->
+        <MudForm @ref="form" @onsubmit="OnValidSubmit">
+            <MudGrid Spacing="4">
+                <!-- Nome do Aparelho -->
+                <MudItem xs="12">
+                    <MudTextField T="string" 
+                                  @bind-Value="deviceModel.Name"
+                                  Label="Nome do Aparelho" 
+                                  Required="true"
+                                  RequiredError="O nome do aparelho é obrigatório"
+                                  Variant="Variant.Outlined"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Label"
+                                  HelperText="Digite o nome completo do aparelho"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <!-- Modelo -->
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" 
+                                  @bind-Value="deviceModel.Model"
+                                  Label="Modelo" 
+                                  Required="true"
+                                  RequiredError="O modelo é obrigatório"
+                                  Variant="Variant.Outlined"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Category"
+                                  HelperText="Ex: XYZ-2024"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <!-- Número de Série -->
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" 
+                                  @bind-Value="deviceModel.SerialNumber"
+                                  Label="Número de Série" 
+                                  Required="true"
+                                  RequiredError="O número de série é obrigatório"
+                                  Variant="Variant.Outlined"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Pin"
+                                  HelperText="Código único de identificação"
+                                  Class="mb-4" />
+                </MudItem>
+
+                <!-- Campos Adicionais Opcionais -->
+                <MudItem xs="12" md="6">
+                    <MudSelect T="string" 
+                               @bind-Value="deviceModel.Category"
+                               Label="Categoria"
+                               Variant="Variant.Outlined"
+                               Adornment="Adornment.Start"
+                               AdornmentIcon="@Icons.Material.Filled.Folder"
+                               HelperText="Selecione a categoria do aparelho"
+                               Class="mb-4">
+                        <MudSelectItem Value="@("Eletrônicos")">Eletrônicos</MudSelectItem>
+                        <MudSelectItem Value="@("Informática")">Informática</MudSelectItem>
+                        <MudSelectItem Value="@("Telecomunicações")">Telecomunicações</MudSelectItem>
+                        <MudSelectItem Value="@("Outros")">Outros</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudDatePicker @bind-Date="deviceModel.PurchaseDate"
+                                   Label="Data de Aquisição"
+                                   Variant="Variant.Outlined"
+                                   Adornment="Adornment.Start"
+                                   AdornmentIcon="@Icons.Material.Filled.CalendarToday"
+                                   HelperText="Data de compra do aparelho"
+                                   Class="mb-4" />
+                </MudItem>
+
+                <!-- Observações -->
+                <MudItem xs="12">
+                    <MudTextField T="string" 
+                                  @bind-Value="deviceModel.Observations"
+                                  Label="Observações" 
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Notes"
+                                  HelperText="Informações adicionais sobre o aparelho"
+                                  Class="mb-6" />
+                </MudItem>
+            </MudGrid>
+
+            <!-- Action Buttons -->
+            <MudDivider Class="my-6" />
+            
+            <MudStack Row 
+                      Justify="Justify.Center" 
+                      Spacing="4" 
+                      Class="mt-6">
+                <MudButton ButtonType="ButtonType.Submit" 
+                           Variant="Variant.Filled" 
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Save"
+                           Class="px-8">
+                    Salvar Aparelho
+                </MudButton>
+                
+                <MudButton Variant="Variant.Outlined" 
+                           Color="Color.Secondary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Cancel"
+                           Href="/"
+                           Class="px-8">
+                    Cancelar
+                </MudButton>
+            </MudStack>
+        </MudForm>
+
+        <!-- Footer Info -->
+        <MudStack Row Justify="Justify.Center" Class="mt-8">
+            <MudText Typo="Typo.caption" 
+                     Color="Color.Tertiary" 
+                     Align="Align.Center">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="mr-2" />
+                Todos os campos marcados com * são obrigatórios
+            </MudText>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private MudForm form;
+    private DeviceModel deviceModel = new();
+
+    public class DeviceModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public string SerialNumber { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public DateTime? PurchaseDate { get; set; }
+        public string Observations { get; set; } = string.Empty;
+    }
+
+    private async Task OnValidSubmit()
+    {
+        await form.Validate();
+        
+        if (form.IsValid)
+        {
+            // Lógica para salvar o aparelho
+            // TODO: Implementar salvamento
+            
+            // Feedback de sucesso
+            // Snackbar.Add("Aparelho cadastrado com sucesso!", Severity.Success);
+        }
+    }
+}
