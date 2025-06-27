@@ -1,0 +1,448 @@
+@page "/aparelhos"
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-8">
+    <MudPaper Class="pa-8" Elevation="8" Style="border-radius: 16px;">
+        <!-- Header Section -->
+        <MudStack Spacing="2" Class="mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.DevicesOther" 
+                     Size="Size.Large" 
+                     Color="Color.Primary" 
+                     Class="align-self-center" />
+            <MudText Typo="Typo.h3" 
+                     Align="Align.Center" 
+                     Color="Color.Primary" 
+                     Class="fw-bold">
+                Gerenciamento de Aparelhos
+            </MudText>
+            <MudText Typo="Typo.body1" 
+                     Align="Align.Center" 
+                     Color="Color.Secondary" 
+                     Class="mb-4">
+                Visualize, gerencie e controle todos os aparelhos cadastrados no sistema
+            </MudText>
+            <MudDivider />
+        </MudStack>
+
+        <!-- Toolbar Section -->
+        <MudStack Row 
+                  Justify="Justify.SpaceBetween" 
+                  AlignItems="AlignItems.Center" 
+                  Class="mb-6">
+            
+            <!-- Search and Filter -->
+            <MudStack Row Spacing="4" AlignItems="AlignItems.Center">
+                <MudTextField T="string" 
+                              @bind-Value="searchString"
+                              Placeholder="Buscar aparelhos..."
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search"
+                              Variant="Variant.Outlined"
+                              Style="min-width: 300px;"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              OnDebounceIntervalElapsed="OnSearch" />
+
+                <MudSelect T="string" 
+                           @bind-Value="selectedCategory"
+                           Label="Filtrar por Categoria"
+                           Variant="Variant.Outlined"
+                           Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.FilterList"
+                           Style="min-width: 200px;"
+                           @onchange="OnCategoryFilter">
+                    <MudSelectItem Value="@("")">Todas as Categorias</MudSelectItem>
+                    <MudSelectItem Value="@("Eletrônicos")">Eletrônicos</MudSelectItem>
+                    <MudSelectItem Value="@("Informática")">Informática</MudSelectItem>
+                    <MudSelectItem Value="@("Telecomunicações")">Telecomunicações</MudSelectItem>
+                    <MudSelectItem Value="@("Outros")">Outros</MudSelectItem>
+                </MudSelect>
+            </MudStack>
+
+            <!-- Action Buttons -->
+            <MudStack Row Spacing="2">
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           OnClick="OpenCreateDialog"
+                           Class="px-6">
+                    Novo Aparelho
+                </MudButton>
+                
+                <MudButton Variant="Variant.Outlined" 
+                           Color="Color.Secondary"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Refresh"
+                           OnClick="RefreshData"
+                           Class="px-4">
+                    Atualizar
+                </MudButton>
+            </MudStack>
+        </MudStack>
+
+        <!-- Statistics Cards -->
+        <MudGrid Spacing="4" Class="mb-6">
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="pa-4" Style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <div>
+                            <MudText Typo="Typo.h4" Class="fw-bold">@devices.Count</MudText>
+                            <MudText Typo="Typo.body2">Total de Aparelhos</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.DevicesOther" Size="Size.Large" />
+                    </MudStack>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="pa-4" Style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <div>
+                            <MudText Typo="Typo.h4" Class="fw-bold">@devices.Count(d => d.Category == "Eletrônicos")</MudText>
+                            <MudText Typo="Typo.body2">Eletrônicos</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.Computer" Size="Size.Large" />
+                    </MudStack>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="pa-4" Style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <div>
+                            <MudText Typo="Typo.h4" Class="fw-bold">@devices.Count(d => d.Category == "Informática")</MudText>
+                            <MudText Typo="Typo.body2">Informática</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.LaptopMac" Size="Size.Large" />
+                    </MudStack>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="pa-4" Style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white;">
+                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <div>
+                            <MudText Typo="Typo.h4" Class="fw-bold">@devices.Count(d => DateTime.Now.Subtract(d.PurchaseDate ?? DateTime.MinValue).Days < 365)</MudText>
+                            <MudText Typo="Typo.body2">Adquiridos este Ano</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.NewReleases" Size="Size.Large" />
+                    </MudStack>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+
+        <!-- Data Table -->
+        <MudTable T="DeviceModel" 
+                  Items="@filteredDevices" 
+                  Dense="false" 
+                  Hover="true" 
+                  Striped="true"
+                  Breakpoint="Breakpoint.Sm"
+                  Loading="@loading"
+                  LoadingProgressColor="Color.Info"
+                  Elevation="4"
+                  Class="rounded-lg">
+            
+            <ToolBarContent>
+                <MudText Typo="Typo.h6" Class="fw-bold">
+                    <MudIcon Icon="@Icons.Material.Filled.TableChart" Class="mr-2" />
+                    Lista de Aparelhos (@filteredDevices.Count() itens)
+                </MudText>
+                <MudSpacer />
+                <MudButton Variant="Variant.Text" 
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.FileDownload"
+                           Size="Size.Small">
+                    Exportar
+                </MudButton>
+            </ToolBarContent>
+            
+            <HeaderContent>
+                <MudTh Style="font-weight: bold;">
+                    <MudTableSortLabel T="DeviceModel" SortBy="new Func<DeviceModel, object>(x => x.Name)">
+                        Nome
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh Style="font-weight: bold;">
+                    <MudTableSortLabel T="DeviceModel" SortBy="new Func<DeviceModel, object>(x => x.Model)">
+                        Modelo
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh Style="font-weight: bold;">
+                    <MudTableSortLabel T="DeviceModel" SortBy="new Func<DeviceModel, object>(x => x.SerialNumber)">
+                        Número de Série
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh Style="font-weight: bold;">
+                    <MudTableSortLabel T="DeviceModel" SortBy="new Func<DeviceModel, object>(x => x.Category)">
+                        Categoria
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh Style="font-weight: bold;">
+                    <MudTableSortLabel T="DeviceModel" SortBy="new Func<DeviceModel, object>(x => x.PurchaseDate)">
+                        Data de Aquisição
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh Style="font-weight: bold; text-align: center;">Ações</MudTh>
+            </HeaderContent>
+            
+            <RowTemplate>
+                <MudTd>
+                    <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
+                        <MudIcon Icon="@GetCategoryIcon(context.Category)" 
+                                 Color="Color.Primary" 
+                                 Size="Size.Small" />
+                        <div>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@context.Name</MudText>
+                            @if (!string.IsNullOrEmpty(context.Observations))
+                            {
+                                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                    @(context.Observations.Length > 50 ? context.Observations.Substring(0, 50) + "..." : context.Observations)
+                                </MudText>
+                            }
+                        </div>
+                    </MudStack>
+                </MudTd>
+                <MudTd>
+                    <MudText Typo="Typo.body1">@context.Model</MudText>
+                </MudTd>
+                <MudTd>
+                    <MudChip T="string" Text="@context.SerialNumber" 
+                             Color="Color.Secondary" 
+                             Size="Size.Small"
+                             Variant="Variant.Text" />
+                </MudTd>
+                <MudTd>
+                    <MudChip T="string" Text="@context.Category" 
+                             Color="@GetCategoryColor(context.Category)" 
+                             Size="Size.Small" />
+                </MudTd>
+                <MudTd>
+                    @if (context.PurchaseDate.HasValue)
+                    {
+                        <MudText Typo="Typo.body2">@context.PurchaseDate.Value.ToString("dd/MM/yyyy")</MudText>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Não informado</MudText>
+                    }
+                </MudTd>
+                <MudTd Style="text-align: center;">
+                    <MudButtonGroup Variant="Variant.Text" Size="Size.Small">
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility" 
+                                       Color="Color.Info"
+                                       Title="Visualizar"
+                                       OnClick="() => ViewDevice(context)" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                       Color="Color.Warning"
+                                       Title="Editar"
+                                       OnClick="() => EditDevice(context)" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                       Color="Color.Error"
+                                       Title="Excluir"
+                                       OnClick="() => DeleteDevice(context)" />
+                    </MudButtonGroup>
+                </MudTd>
+            </RowTemplate>
+            
+            <NoRecordsContent>
+                <MudStack AlignItems="AlignItems.Center" Spacing="4" Class="pa-8">
+                    <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Secondary" />
+                    <MudText Typo="Typo.h6" Color="Color.Secondary">Nenhum aparelho encontrado</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Tente ajustar os filtros ou cadastre um novo aparelho
+                    </MudText>
+                    <MudButton Variant="Variant.Filled" 
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               OnClick="OpenCreateDialog">
+                        Cadastrar Primeiro Aparelho
+                    </MudButton>
+                </MudStack>
+            </NoRecordsContent>
+        </MudTable>
+
+        <!-- Footer Info -->
+        <MudStack Row Justify="Justify.Center" Class="mt-6">
+            <MudText Typo="Typo.caption" 
+                     Color="Color.Tertiary" 
+                     Align="Align.Center">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="mr-2" />
+                Última atualização: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            </MudText>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+<!-- Dialogs -->
+<MudDialog @bind-IsVisible="showCreateDialog" Options="@(new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true })">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3" />
+            Novo Aparelho
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <DeviceForm OnSave="HandleDeviceSaved" OnCancel="CloseCreateDialog" />
+    </DialogContent>
+</MudDialog>
+
+<MudDialog @bind-IsVisible="showEditDialog" Options="@(new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true })">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />
+            Editar Aparelho
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <DeviceForm Device="selectedDevice" OnSave="HandleDeviceSaved" OnCancel="CloseEditDialog" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private List<DeviceModel> devices = new();
+    private IEnumerable<DeviceModel> filteredDevices => devices.Where(FilterDevices);
+    private string searchString = "";
+    private string selectedCategory = "";
+    private bool loading = false;
+    private bool showCreateDialog = false;
+    private bool showEditDialog = false;
+    private DeviceModel selectedDevice = new();
+
+    public class DeviceModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public string SerialNumber { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public DateTime? PurchaseDate { get; set; }
+        public string Observations { get; set; } = string.Empty;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSampleData();
+    }
+
+    private async Task LoadSampleData()
+    {
+        loading = true;
+        
+        // Simular carregamento
+        await Task.Delay(1000);
+        
+        devices = new List<DeviceModel>
+        {
+            new() { Id = 1, Name = "Smartphone Galaxy S24", Model = "SM-S921B", SerialNumber = "SN123456789", Category = "Eletrônicos", PurchaseDate = new DateTime(2024, 3, 15), Observations = "Aparelho em perfeito estado" },
+            new() { Id = 2, Name = "Notebook Dell Inspiron", Model = "5510-A20S", SerialNumber = "DL987654321", Category = "Informática", PurchaseDate = new DateTime(2023, 8, 22), Observations = "Usado para desenvolvimento" },
+            new() { Id = 3, Name = "Roteador TP-Link", Model = "Archer C6", SerialNumber = "TP445566778", Category = "Telecomunicações", PurchaseDate = new DateTime(2024, 1, 10), Observations = "" },
+            new() { Id = 4, Name = "Tablet iPad Air", Model = "A2316", SerialNumber = "AP112233445", Category = "Eletrônicos", PurchaseDate = new DateTime(2024, 6, 5), Observations = "Para apresentações" },
+            new() { Id = 5, Name = "Impressora HP LaserJet", Model = "M404dn", SerialNumber = "HP556677889", Category = "Informática", PurchaseDate = new DateTime(2023, 12, 18), Observations = "Impressão monocromática" }
+        };
+        
+        loading = false;
+    }
+
+    private bool FilterDevices(DeviceModel device)
+    {
+        var matchesSearch = string.IsNullOrEmpty(searchString) || 
+                           device.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                           device.Model.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                           device.SerialNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase);
+        
+        var matchesCategory = string.IsNullOrEmpty(selectedCategory) || 
+                             device.Category == selectedCategory;
+        
+        return matchesSearch && matchesCategory;
+    }
+
+    private async Task OnSearch(string text)
+    {
+        searchString = text;
+        StateHasChanged();
+    }
+
+    private async Task OnCategoryFilter()
+    {
+        StateHasChanged();
+    }
+
+    private async Task RefreshData()
+    {
+        await LoadSampleData();
+    }
+
+    private void OpenCreateDialog()
+    {
+        selectedDevice = new DeviceModel();
+        showCreateDialog = true;
+    }
+
+    private void CloseCreateDialog()
+    {
+        showCreateDialog = false;
+    }
+
+    private void EditDevice(DeviceModel device)
+    {
+        selectedDevice = device;
+        showEditDialog = true;
+    }
+
+    private void CloseEditDialog()
+    {
+        showEditDialog = false;
+    }
+
+    private void ViewDevice(DeviceModel device)
+    {
+        // TODO: Implementar visualização detalhada
+        // Snackbar.Add($"Visualizando: {device.Name}", Severity.Info);
+    }
+
+    private async Task DeleteDevice(DeviceModel device)
+    {
+        // TODO: Implementar confirmação de exclusão
+        devices.Remove(device);
+        // Snackbar.Add($"Aparelho {device.Name} excluído com sucesso!", Severity.Success);
+        StateHasChanged();
+    }
+
+    private async Task HandleDeviceSaved(DeviceModel device)
+    {
+        if (device.Id == 0)
+        {
+            // Novo dispositivo
+            device.Id = devices.Max(d => d.Id) + 1;
+            devices.Add(device);
+        }
+        else
+        {
+            // Atualizar dispositivo existente
+            var index = devices.FindIndex(d => d.Id == device.Id);
+            if (index >= 0)
+                devices[index] = device;
+        }
+        
+        showCreateDialog = false;
+        showEditDialog = false;
+        StateHasChanged();
+    }
+
+    private string GetCategoryIcon(string category) => category switch
+    {
+        "Eletrônicos" => Icons.Material.Filled.Smartphone,
+        "Informática" => Icons.Material.Filled.Computer,
+        "Telecomunicações" => Icons.Material.Filled.Router,
+        _ => Icons.Material.Filled.DevicesOther
+    };
+
+    private Color GetCategoryColor(string category) => category switch
+    {
+        "Eletrônicos" => Color.Primary,
+        "Informática" => Color.Info,
+        "Telecomunicações" => Color.Success,
+        _ => Color.Secondary
+    };
+}
