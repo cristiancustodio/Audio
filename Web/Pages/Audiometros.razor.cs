@@ -1,4 +1,5 @@
 using MudBlazor;
+using Web.Models;
 
 namespace Web.Pages;
 
@@ -32,11 +33,13 @@ public partial class Audiometros
         if (!audiometer.CalibrationDate.HasValue && !audiometer.MeasurementDate.HasValue)
             return "Pendente Configuração";
 
+#pragma warning disable CS8629 // Nullable value type may be null.
         var oldestDate = new[] { audiometer.CalibrationDate, audiometer.MeasurementDate }
             .Where(d => d.HasValue)
-            .Select(d => d.Value)
+            .Select(d => d.Value!)
             .DefaultIfEmpty(DateTime.MinValue)
             .Min();
+#pragma warning restore CS8629 // Nullable value type may be null.
 
         if (oldestDate == DateTime.MinValue) return "Pendente";
 
