@@ -1,10 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
 <MudLayout>
     <MudDrawer @bind-Open="@_open" Anchor="Anchor.Left" Elevation="2" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
         <NavMenuLeft />
     </MudDrawer>
-   <MudDrawer Anchor="Anchor.Right" Elevation="2" Variant="@DrawerVariant.Mini">
+    <MudDrawer Anchor="Anchor.Right" Elevation="2" Variant="@DrawerVariant.Mini">
         <NavMenuRight />
     </MudDrawer>
     <MudMainContent>
