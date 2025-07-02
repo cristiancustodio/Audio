@@ -1,5 +1,5 @@
 @using MudBlazor
-@* @inherits AudiometerEditDialogBase *@
+
 
 <MudDialog>
     <TitleContent>
@@ -27,7 +27,7 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="MudDialog.Cancel" Variant="Variant.Text" Color="Color.Secondary">
+        <MudButton OnClick="Cancel" Variant="Variant.Text" Color="Color.Secondary">
             Cancelar
         </MudButton>
         <MudButton OnClick="OnValidSubmit" Variant="Variant.Filled" Color="Color.Primary"
@@ -50,6 +50,12 @@
         {
             MudDialog.Close(DialogResult.Ok(Audiometer));
         }
+    }
+
+    void Cancel() 
+    {
+        MudDialog.Cancel();
+        MudDialog = null;
     }
 }
 
